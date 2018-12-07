@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>北京协和医院眼科组教学活动管理系统</title>
+		<link href="assets/bt.min.css" rel="preload" as="style">
+		<link href="assets/bt2.min.js" rel="preload" as="script">
+		<script src="assets/bt1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="assets/bt.min.css">
+		<link href="assets/public.css" rel="stylesheet">
+		<link rel="shortcut icon" href="favicon.ico">
+	</head>
+
+	<body>
+		<div class="container">
+			<!--加载提示-->
+			<div class="row">
+				<!--页头-->
+				<div class="alert">北京协和医院眼科组教学活动管理系统</div>
+				<!--按钮组-->
+				<div class="btn-group menu1" role="group">
+					<button type="button" class="btn btn-default active">活动列表</button>
+					<button type="button" class="btn btn-default">报表</button>
+					<button type="button" class="btn btn-default">设置</button>
+				</div>
+				<button type="button" class="btn btn-default logout">退出登录</button>
+				<br />
+				<div class="btn-group menu2" role="group">
+					<button type="button" class="btn btn-default active">非周期</button>
+					<button type="button" class="btn btn-default">周期</button>
+				</div>
+				<div class="btn-group menu3 hidden" role="group">
+					<button type="button" class="btn btn-default active">总体设置</button>
+					<button type="button" class="btn btn-default">人员设置</button>
+				</div>
+				<!--搜索表单-->
+				<div class="jumbotron">
+					<form class="form-inline search">
+						<div class="form-group">
+							<div class="input-group">
+								<select id="year" class="form-control input-sm years">
+									<script type="text/x-handlebars-template" id="years">
+										<option value="0000">缺省</option>
+										{{#each this}}
+										<option value="{{this}}">{{this}}</option>
+										{{/each}}
+									</script>
+								</select>
+								<div class="input-group-addon">年</div>
+							</div>
+						</div>
+						<div class="form-group monthForm">
+							<div class="input-group">
+								<select id="month" class="form-control input-sm"> 
+									<option value="00">缺省</option>
+									<option value="01">1</option>
+									<option value="02">2</option>
+									<option value="03">3</option>
+									<option value="04">4</option>
+									<option value="05">5</option>
+									<option value="06">6</option>
+									<option value="07">7</option>
+									<option value="08">8</option>
+									<option value="09">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
+								<div class="input-group-addon">月</div>
+							</div>
+						</div>
+						<div class="form-group dayForm">
+							<div class="input-group">
+								<select id="day" class="form-control input-sm select-days">
+									<script type="text/x-handlebars-template" id="select-days">
+										<option value="0">缺省</option>
+										{{#each this}}
+										<option value="{{this}}">{{this}}</option>
+										{{/each}}
+									</script>
+								</select>
+								<div class="input-group-addon">日</div>
+							</div>
+						</div>
+						<div class="form-group periodForm hidden">
+							<div class="input-group">
+								<div class="input-group-addon">周期</div>
+								<select id="period" class="form-control input-sm"> 
+									<option value="0">缺省</option>
+									<option value="month">月份</option>
+									<option value="week">星期</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group periodDayForm hidden">
+							<div class="input-group">
+								<div class="input-group-addon">时间</div>
+								<select id="periodDay" class="form-control input-sm"> 
+									<option value="0">缺省</option>
+								</select>
+							</div>
+						</div>
+						<span class="actionSearch2">
+							<script type="text/x-handlebars-template" id="actionSearch2">
+								<div class="form-group">
+									<div class="input-group">
+										<div class="input-group-addon">活动类型</div>
+										<select id="actionType" class="form-control input-sm">
+											<option value="0">缺省</option>
+											{{#each actionType}}
+											<option value="{{this.atid}}">{{this.name}}</option>
+											{{/each}}
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<div class="input-group-addon">活动名称</div>
+										<input type="text" class="form-control input-sm" id="actionName" placeholder="缺省">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<div class="input-group-addon">授课人/负责人</div>
+										<select id="teacher" class="form-control input-sm">
+											<option value="0">缺省</option>
+											{{#each teachers}}
+											<option value="{{this.userid}}">{{this.username}}</option>
+											{{/each}}
+										</select>
+									</div>
+								</div>
+							</script>
+						</span>
+						<button type="submit" data-type='once' class="submit btn btn-sm btn-primary">搜索</button>
+					</form>
+				</div>
+				<!--表格-->
+				<!--活动列表非周期-->
+				<section id="actionList1">
+					<div class="addActionBtn">
+						<button type="button" id='addAction1' data-toggle="modal" data-operation="add" data-target="#editModal1" class="btn btn-sm btn-primary">新增活动</button>
+						<button type="button" id='upExcel1' data-toggle="modal" data-type="once" data-target="#upExcelModal" class="btn btn-sm btn-primary">新增Excel</button>
+					</div>
+					<div class="table-responsive onceActTable">
+						<script type="text/x-handlebars-template" id="onceActTable">
+						{{#each this}}
+							<table class="table table-bordered">
+								<tr>
+									<th>日期</th><th>时间</th><th>活动类型</th><th>活动名称</th><th>授课人</th><th>活动地址</th><th>主动通知范围</th><th>是否需预约</th><th>预约名额</th>
+								</tr>
+								<tr>
+									<td>{{year}}-{{month}}-{{day}}</td>
+									<td>{{hour}}点{{minute}}分</td>
+									<td data-atid='{{activeType.atid}}'>{{activeType.name}}</td>
+									<td>{{name}}</td>
+									<td data-userid='{{teach.userid}}'>{{teach.username}}</td>
+									<td>{{address}}</td>
+									<td data-did="{{did}}">{{department.name}}</td>
+									{{#if state}}
+									<td>是</td>
+									{{else}}
+									<td>否</td>
+									{{/if}}
+									<td>{{bespeaknum}}人</td>
+								</tr>
+								<tr>
+									<th>提前预约时间</th><th>预约人员名单</th><th>活动评分</th><th>实际签到名单</th><th>签到二维码</th><th>课件</th><th>活动照片</th><th>编辑</th><th>删除</th>
+								</tr>
+								<tr>
+									<td>{{bespeakday}}天</td>
+									<td><span data-toggle="modal" data-target="#nameListModal" data-nametype='order' class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></td>
+									<td>{{score}}分</td>
+									<td><span data-toggle="modal" data-target="#nameListModal" data-nametype='signin' class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></td>
+									<td><span data-toggle="modal" data-target="#QRcodeModal" class="glyphicon glyphicon-qrcode" aria-hidden="true"></span></td>
+									<td><span data-toggle="modal" data-target="#fileViewModal" data-filetype='courseware' class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></td>
+									<td><span data-toggle="modal" data-target="#fileViewModal" data-filetype='pic' class="glyphicon glyphicon-picture" aria-hidden="true"></span></td>
+									<td><button type="button" id='{{@index}}' data-toggle="modal" data-operation="{{oaid}}" data-target="#editModal1" class="btn btn-sm btn-primary">编辑</button></td>
+									<td><button type="button" id='{{oaid}}' data-type="once" data-toggle="modal" data-target="#delModal" class="btn btn-sm btn-danger">删除</button></td>
+								</tr>
+							</table>
+						{{/each}}	
+						</script>
+					</div>
+					<!--非周期性活动分页-->
+					<nav aria-label="onceActTable navigation">
+						<ul class="pagination onceActListNav">
+							<script type="text/x-handlebars-template" id="onceActListNav">
+								<li>
+									<a href="javascript:;" aria-label="Previous">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+								{{#each this}}
+								<li class="{{this}}"><a href="javascript:;" aria-label="{{this}}">{{this}}</a></li>
+								{{/each}}
+								<li>
+									<a href="javascript:;" aria-label="Next">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</script>
+						</ul>
+					</nav>
+				</section>
+				<!--活动列表周期性-->
+				<section id="actionList2" class="hidden">
+					<div class="addActionBtn">
+						<button type="button" id='addAction2' data-toggle="modal" data-operation="add" data-target="#editModal2" class="btn btn-sm btn-primary">新增活动</button>
+						<button type="button" id='upExcel2' data-toggle="modal" data-type="repeat" data-target="#upExcelModal" class="btn btn-sm btn-primary">新增Excel</button>
+					</div>
+					<div class="table-responsive repeatActTable">
+						<script type="text/x-handlebars-template" id="repeatActTable">
+						{{#each this}}
+							<table class="table table-bordered">
+								<tr>
+									<th>活动名</th><th>周期</th><th>时间</th><th>具体时间</th><th>活动类型</th><th>授课人/负责人</th><th>活动地址</th><th>主动通知范围</th><th>编辑</th><th>删除</th>
+								</tr>
+								<tr>
+									<td>{{name}}</td>
+									<td>{{periodZh}}</td>
+									{{#if state}}
+									<td>每星期{{weekDay}}</td>
+									{{else}}
+									<td>每月{{day}}日</td>
+									{{/if}}
+									<td>{{time}}</td>
+									<td data-atid="{{activeType.atid}}">{{activeType.name}}</td>
+									<td data-userid="{{teach.userid}}">{{teach.username}}</td>
+									<td>{{address}}</td>
+									<td data-did="{{department.did}}">{{department.name}}</td>
+									<td><button type="button" id='{{@index}}' data-toggle="modal" data-target="#editModal2" data-operation="edit" class="btn btn-sm btn-primary">编辑</button></td>
+									<td><button type="button" id='{{paid}}' data-type="repeat" data-toggle="modal" data-target="#delModal" class="btn btn-sm btn-danger">删除</button></td>
+								</tr>
+							</table>
+						{{/each}}	
+						</script>
+					</div>
+					<!--周期性活动分页-->
+					<nav aria-label="repeatActTable navigation">
+						<ul class="pagination repeatActListNav">
+							<script type="text/x-handlebars-template" id="repeatActListNav">
+								<li>
+									<a href="javascript:;" aria-label="Previous">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+								{{#each this}}
+								<li class="{{this}}"><a href="javascript:;" aria-label="{{this}}">{{this}}</a></li>
+								{{/each}}
+								<li>
+									<a href="javascript:;" aria-label="Next">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</script>
+						</ul>
+					</nav>
+				</section>
+				<!--上传excel弹窗-->
+				<div class="modal fade" id="upExcelModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+					<div class="modal-dialog modal-sm" role="document">
+						<form class="modal-content" id="upExcelForm">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="mySmallModalLabel">上传Excel文档</h4></div>
+							<div class="modal-body">
+								<input type="file" id="uploadfile" name="uploadfile">
+    							<p class="help-block">选择本地Excel文件，支持xls/xlsx两种后缀，表格格式要与模板格式相符。</p>
+    							<p class="help-block"><a href="#">点此下载文件模板</a></p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">取消</button>
+								<button type="button" class="sureUpExcel btn btn-sm btn-danger">确认上传</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<!--删除按钮弹窗(活动ID)-->
+				<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+					<div class="modal-dialog modal-sm" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="mySmallModalLabel">删除活动</h4></div>
+							<div class="modal-body">您确定要删除此活动吗？删除不可恢复！</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">取消</button>
+								<button type="button" class="sureDel btn btn-sm btn-danger" data-dismiss="modal">删除</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--预约人员/签到人员名单弹窗-->
+				<div class="modal fade" id="nameListModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="mySmallModalLabel"></h4></div>
+							<div class="modal-body">
+								<div class="table-responsive">
+								  	<table class="table table-striped">
+								    	<tr>
+								    		<th>名字</th><th>科室</th><th>标签</th><th>时间</th>
+								    	</tr>
+								    	<tr>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    	</tr>
+								    	<tr>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    		<td>hah</td>
+								    	</tr>
+								  	</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--签到二维码弹窗-->
+				<div class="modal fade" id="QRcodeModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+					<div class="modal-dialog modal-sm" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="mySmallModalLabel">签到二维码</h4></div>
+							<div class="modal-body" style="text-align: center;">
+								<img src="http://www.zuifengyun.com/wp-content/uploads/2016/05/gongzhonghao.jpg"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--活动照片/课件弹窗-->
+				<div class="modal fade" id="fileViewModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="mySmallModalLabel"></h4></div>
+							<div class="modal-body"></div>
+						</div>
+					</div>
+				</div>
+				<!--编辑按钮弹窗-->
+				<!--非周期性活动编辑-->
+				<div class="modal fade" id="editModal1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="myLargeModalLabel">非周期活动编辑</h4>
+							</div>
+							<div class="modal-body row">
+								<div class="col-sm-6">
+									<div class="form-inline form-group">
+										<label>活动名称：</label>
+										<input id="actionName" class="form-control input-sm" required />
+									</div>
+									<span class="hdbsEditModal1">
+										<script type="text/x-handlebars-template" id="hdbsEditModal1">
+											<div class="form-inline form-group">
+												<label>活动类型：</label>
+												<select id="actionType" class="form-control input-sm">
+													{{#each actionType}}
+													<option value="{{this.atid}}">{{this.name}}</option>
+													{{/each}}
+												</select>
+											</div>
+											<div class="form-inline form-group">
+												<label>授课人/活动负责人：</label>
+												<select id="teacher" class="form-control input-sm">
+													{{#each teachers}}
+													<option value='{{this.userid}}'>{{this.username}}</option>
+													{{/each}}
+												</select>
+											</div>
+											<div class="form-inline form-group">
+												<label>活动地址：</label>
+												<select id="actAddress" class="form-control input-sm">
+													{{#each actAddress}}
+													<option value="{{this.name}}">{{this.name}}</option>
+													{{/each}}
+												</select>
+											</div>
+											<div class="form-inline form-group">
+												<label>主动通知范围：</label>
+												<select id="groups" class="form-control input-sm">
+													{{#each groups}}
+													<option value="{{this.did}}">{{this.name}}</option>
+													{{/each}}
+												</select>
+											</div>
+										</script>
+									</span>
+									<label>活动时间：</label>
+									<div class="form-inline form-group">
+										<select class="form-control input-sm editModalYears">
+											<script type="text/x-handlebars-template" id="editModalYears">
+												{{#each this}}
+												<option value="{{this}}">{{this}}年</option>
+												{{/each}}
+											</script>
+										</select>
+										<select class="form-control input-sm editModalMonth">
+											<option value="1">1月</option>
+											<option value="2">2月</option>
+											<option value="3">3月</option>
+											<option value="4">4月</option>
+											<option value="5">5月</option>
+											<option value="6">6月</option>
+											<option value="7">7月</option>
+											<option value="8">8月</option>
+											<option value="9">9月</option>
+											<option value="10">10月</option>
+											<option value="11">11月</option>
+											<option value="12">12月</option>		
+										</select>
+										<select class="form-control input-sm editModalDays">
+											<script type="text/x-handlebars-template" id="editModalDays">
+												{{#each this}}
+												<option value="{{this}}">{{this}}日</option>
+												{{/each}}
+											</script>
+										</select>
+										<select class="form-control input-sm editModalHours">
+											<option value="0">00点</option>
+											<option value="1">01点</option>
+											<option value="2">02点</option>
+											<option value="3">03点</option>
+											<option value="4">04点</option>
+											<option value="5">05点</option>
+											<option value="6">06点</option>
+											<option value="7">07点</option>
+											<option value="8">08点</option>
+											<option value="9">09点</option>
+											<option value="10">10点</option>
+											<option value="11">11点</option>
+											<option value="12">12点</option>		
+											<option value="13">13点</option>		
+											<option value="14">14点</option>		
+											<option value="15">15点</option>		
+											<option value="16">16点</option>		
+											<option value="17">17点</option>		
+											<option value="18">18点</option>		
+											<option value="19">19点</option>		
+											<option value="20">20点</option>		
+											<option value="21">21点</option>		
+											<option value="22">22点</option>		
+											<option value="23">23点</option>		
+										</select>
+										<select class="form-control input-sm editModalMinute">
+											<option value="0">00分</option>
+											<option value="5">05分</option>
+											<option value="15">15分</option>
+											<option value="20">20分</option>
+											<option value="25">25分</option>
+											<option value="30">30分</option>
+											<option value="35">35分</option>
+											<option value="40">40分</option>
+											<option value="45">45分</option>
+											<option value="50">50分</option>
+											<option value="55">55分</option>
+										</select>
+									</div>
+									<div class="form-inline form-group">
+										<label>是否需要预约：</label>
+										<select id="ifOrder" class="form-control input-sm">
+											<option value="true">是</option>
+											<option value="false">否</option>
+										</select>
+									</div>
+									<div class="form-inline form-group ifOrderChange">
+										<label>预约名额：</label>
+										<input id="reserveNum" type="number" min="1" step="1" class="form-control input-sm" required/>
+										<label>人</label>
+									</div>
+									<div class="form-inline form-group ifOrderChange">
+										<label>提前预约时间：</label>
+										<input id="reserveTime" type="number" min="1" step="1" class="form-control input-sm" required/>
+										<label>天</label>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<span class="picBox">
+										<label>活动照片：</label>
+										<div class="actionPic">
+											<script type="text/x-handlebars-template" id="actionPic">
+												{{#each this}}
+												<div class="actionPicItem">
+										      		<img src="{{this}}">
+										      		<span class="glyphicon glyphicon-remove" style="font-size: 20px;" aria-hidden="true"></span>
+												</div>
+										      	{{/each}}
+										      	<div class="actionPicItem">
+										      		<img id="addActionPic" src="img/uploadpic.png">
+										      	</div>
+									      	</script>
+										</div>
+										<span class="clearfix"></span>
+										<br />
+									</span>
+									<label>课件：</label>
+									<div class="coursewareFile">
+										<script type="text/x-handlebars-template" id="coursewareFile">
+											{{#each coursewareType}}
+											<div class="coursewareFileItem">
+												<button class="btn">{{this}}</button>
+												<span class="glyphicon glyphicon-remove" style="font-size: 20px;" aria-hidden="true"></span>
+											</div>
+											{{/each}}
+											<div class="coursewareFileItem img">
+												<img id="addCourseware" src="img/uploadFile.png">
+											</div>
+											<div class="span">
+												{{#each coursewareName}}
+												<span>{{this}}...</span>
+												{{/each}}
+											</div>
+										</script>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+								<button type="button" class="sureEdit btn btn-sm btn-primary">确认</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--周期性活动编辑-->
+				<div class="modal fade" id="editModal2" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+								<h4 class="modal-title" id="myLargeModalLabel">周期性活动编辑</h4>
+							</div>
+							<div class="modal-body">
+								<div class="form-inline form-group">
+									<label>活动名称：</label>
+									<input id="actionName" class="form-control input-sm" required/>
+								</div>
+								<span class="hdbsEditModal2">
+									<script type="text/x-handlebars-template" id="hdbsEditModal2">
+										<div class="form-inline form-group">
+											<label>活动类型：</label>
+											<select id="actionType" class="form-control input-sm">
+												{{#each actionType}}
+												<option value="{{this.atid}}">{{this.name}}</option>
+												{{/each}}
+											</select>
+										</div>
+										<div class="form-inline form-group">
+											<label>授课人/活动负责人：</label>
+											<select id="teacher" class="form-control input-sm">
+												{{#each teachers}}
+												<option value="{{this.userid}}">{{this.username}}</option>
+												{{/each}}
+											</select>
+										</div>
+										<div class="form-inline form-group">
+											<label>活动地址：</label>
+											<select id="actAddress" class="form-control input-sm">
+												{{#each actAddress}}
+												<option value="{{this.name}}">{{this.name}}</option>
+												{{/each}}
+											</select>
+										</div>
+										<div class="form-inline form-group">
+											<label>主动通知范围：</label>
+											<select id="groups" class="form-control input-sm">
+												{{#each groups}}
+												<option value="{{this.did}}">{{this.name}}</option>
+												{{/each}}
+											</select>
+										</div>
+									</script>
+								</span>
+								<div class="form-inline form-group">
+									<label>以</label>
+									<select id="cyclicity" class="form-control input-sm">
+										<option value="month">月份</option>
+										<option value="week">星期</option>
+									</select>
+									<label>为周期</label>
+								</div>
+								<div class="form-inline form-group">
+									<label class="cyclicityType">每月</label>
+									<select class="form-control input-sm cyclicityDay">
+										<option value="1">1日</option>
+										<option value="2">2日</option>
+										<option value="3">3日</option>
+										<option value="4">4日</option>
+										<option value="5">5日</option>
+										<option value="6">6日</option>
+										<option value="7">7日</option>
+										<option value="8">8日</option>
+										<option value="9">9日</option>
+										<option value="10">10日</option>
+										<option value="11">11日</option>
+										<option value="12">12日</option>
+										<option value="13">13日</option>
+										<option value="14">14日</option>
+										<option value="15">15日</option>
+										<option value="16">16日</option>
+										<option value="17">17日</option>
+										<option value="18">18日</option>
+										<option value="19">19日</option>
+										<option value="20">20日</option>
+										<option value="21">21日</option>
+										<option value="22">22日</option>
+										<option value="23">23日</option>
+										<option value="24">24日</option>
+										<option value="25">25日</option>
+										<option value="26">26日</option>
+										<option value="27">27日</option>
+										<option value="28">28日</option>
+										<option value="29">29日</option>
+										<option value="30">30日</option>
+										<option value="31">31日</option>
+									</select>
+									<select class="form-control input-sm editModalHours">
+										<option value="00">00点</option>
+										<option value="01">01点</option>
+										<option value="02">02点</option>
+										<option value="03">03点</option>
+										<option value="04">04点</option>
+										<option value="05">05点</option>
+										<option value="06">06点</option>
+										<option value="07">07点</option>
+										<option value="08">08点</option>
+										<option value="09">09点</option>
+										<option value="10">10点</option>
+										<option value="11">11点</option>
+										<option value="12">12点</option>		
+										<option value="13">13点</option>		
+										<option value="14">14点</option>		
+										<option value="15">15点</option>		
+										<option value="16">16点</option>		
+										<option value="17">17点</option>		
+										<option value="18">18点</option>		
+										<option value="19">19点</option>		
+										<option value="20">20点</option>		
+										<option value="21">21点</option>		
+										<option value="22">22点</option>		
+										<option value="23">23点</option>		
+									</select>
+									<select class="form-control input-sm editModalMinute">
+										<option value="00">00分</option>
+										<option value="05">05分</option>
+										<option value="15">15分</option>
+										<option value="20">20分</option>
+										<option value="25">25分</option>
+										<option value="30">30分</option>
+										<option value="35">35分</option>
+										<option value="40">40分</option>
+										<option value="45">45分</option>
+										<option value="50">50分</option>
+										<option value="55">55分</option>
+									</select>
+								</div>
+								<div class="form-inline form-group">
+									<label>开始时间：</label>
+									<select class="form-control input-sm beginYear">
+										<script type="text/x-handlebars-template" id="beginYear">
+											{{#each this}}
+											<option value="{{this}}">{{this}}年</option>
+											{{/each}}
+										</script>
+									</select>
+									<select class="form-control input-sm beginMonth">
+										<option value="1">1月</option>
+										<option value="2">2月</option>
+										<option value="3">3月</option>
+										<option value="4">4月</option>
+										<option value="5">5月</option>
+										<option value="6">6月</option>
+										<option value="7">7月</option>
+										<option value="8">8月</option>
+										<option value="9">9月</option>
+										<option value="10">10月</option>
+										<option value="11">11月</option>
+										<option value="12">12月</option>		
+									</select>
+									<select class="form-control input-sm beginDays">
+										<script type="text/x-handlebars-template" id="beginDays">
+											{{#each this}}
+											<option value="{{this}}">{{this}}日</option>
+											{{/each}}
+										</script>
+									</select>
+								</div>
+								<div class="form-inline form-group">
+									<label>结束时间：</label>
+									<select class="form-control input-sm endYear">
+										<script type="text/x-handlebars-template" id="endYear">
+											{{#each this}}
+											<option value="{{this}}">{{this}}年</option>
+											{{/each}}
+										</script>
+									</select>
+									<select class="form-control input-sm endMonth">
+										<option value="1">1月</option>
+										<option value="2">2月</option>
+										<option value="3">3月</option>
+										<option value="4">4月</option>
+										<option value="5">5月</option>
+										<option value="6">6月</option>
+										<option value="7">7月</option>
+										<option value="8">8月</option>
+										<option value="9">9月</option>
+										<option value="10">10月</option>
+										<option value="11">11月</option>
+										<option value="12">12月</option>		
+									</select>
+									<select class="form-control input-sm endDays">
+										<script type="text/x-handlebars-template" id="endDays">
+											{{#each this}}
+											<option value="{{this}}">{{this}}日</option>
+											{{/each}}
+										</script>
+									</select>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
+								<button type="button" class="sureEdit btn btn-sm btn-primary">确认</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--报表-->
+				<section id="report" class="hidden">
+					<div class="col-md-4">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">个人维度</h3>
+							</div>
+							<div class="panel-body">
+								<!--选项卡1-->
+								<form class="form-inline report1">
+									<script type="text/x-handlebars-template" id="report1">
+										<div class="form-group">
+											<select class="form-control input-sm years">
+												{{#each years}}
+												<option value="{{this}}">{{this}}</option>
+												{{/each}}
+											</select>
+											<label>年</label>
+										</div>
+										<div class="form-group">
+											<select class="form-control input-sm users">
+												{{#each users}}
+												<option value="{{userid}}">{{username}}</option>
+												{{/each}}
+											</select>
+											<label>教学活动参与总数</label>
+										</div>
+									</script>
+								</form>
+								<!--饼图1-->
+								<canvas id="canvas1"></canvas>
+								<!--选项卡2-->
+								<form class="form-inline form-inline2 report2">
+									<script type="text/x-handlebars-template" id="report2">
+										<div class="form-group">
+											<select class="form-control input-sm years">
+												{{#each years}}
+													<option value="{{this}}">{{this}}</option>
+												{{/each}}
+											</select>
+											<label>年</label>
+										</div>
+										<div class="form-group">
+											<select class="form-control input-sm teachers">
+												{{#each teachers}}
+													<option value="{{userid}}">{{username}}</option>
+												{{/each}}
+											</select>
+											<label>授课总数</label>
+										</div>
+									</script>
+								</form>
+								<!--饼图2-->
+								<canvas id="canvas2"></canvas>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">科室维度</h3>
+							</div>
+							<div class="panel-body">
+								<!--选项卡-->
+								<form class="form-inline report3">
+									<script type="text/x-handlebars-template" id="report3">
+										<div class="form-group">
+											<select class="form-control input-sm years">
+												{{#each years}}
+													<option value="{{this}}">{{this}}</option>
+												{{/each}}
+											</select>
+											<label>年</label>
+										</div>
+										<div class="form-group">
+											<select class="form-control input-sm groups">
+												{{#each groups}}
+													<option value="{{did}}">{{name}}</option>
+												{{/each}}
+											</select>
+											<label>活动总数</label>
+										</div>
+									</script>
+								</form>
+								<!--饼图3-->
+								<canvas id="canvas3"></canvas>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">排行榜</h3>
+							</div>
+							<div class="panel-body">
+								<!--选项卡-->
+								<form class="form-inline report4">
+									<script type="text/x-handlebars-template" id="report4">
+										<div class="form-group">
+											<select class="form-control input-sm years">
+												{{#each years}}
+													<option value="{{this}}">{{this}}</option>
+												{{/each}}
+											</select>
+											<label>年授课活动排名前</label>
+										</div>
+										<div class="form-group">
+											<select class="form-control input-sm rank">
+												<option value="3">三</option>
+												<option value="5">五</option>
+												<option value="10">十</option>
+											</select>
+											<label>医生(按数量)</label>
+										</div>
+									</script>
+								</form>
+								<!--条形图-->
+								<canvas id="canvas4"></canvas>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--总体设置-->
+				<section id="globalSet" class="hdbsGlobalSet hidden">
+					<script type="text/x-handlebars-template" id="hdbsGlobalSet">
+						<!--设置1-->
+						<div class="col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-heading" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+									<h4 class="panel-title">
+							          	活动类型
+							          	<span class="caret"></span>
+							      </h4>
+								</div>
+								<div id="collapse1" class="panel-collapse collapse" role="tabpanel">
+									<ul class="list-group actionTypeList">
+										{{#each actionType}}
+											<li class="list-group-item">{{this.name}}<button type="button" data-id='{{this.atid}}' class="close" aria-label="Close"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button></li>
+										{{/each}}
+										<li class="list-group-item button addActionType">
+											<input type="text" placeholder="新增..." style="width:70%;display: inline-block;" class="form-control input-sm" />
+											<span role="button" style="font-size: 21px;float:right;line-height: 30px;" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--设置2-->
+						<div class="col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-heading" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+									<h4 class="panel-title">
+							          	活动地址
+							          	<span class="caret"></span>
+							      </h4>
+								</div>
+								<div id="collapse2" class="panel-collapse collapse" role="tabpanel">
+									<ul class="list-group actAddressList">
+										{{#each actAddress}}
+											<li class="list-group-item">{{this.name}}<button data-id='{{this.adid}}' type="button" class="close" aria-label="Close"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button></li>
+										{{/each}}
+										<li class="list-group-item button addActAddress">
+											<input type="text" placeholder="新增..." style="width:70%;display: inline-block;" class="form-control input-sm" />
+											<span role="button" style="font-size: 21px;float:right;line-height: 30px;" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--设置3-->
+						<div class="col-md-4">
+							<div class="panel panel-default">
+								<div class="panel-heading" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+									<h4 class="panel-title">
+							          	部门/科室
+							          	<span class="caret"></span>
+							      </h4>
+								</div>
+								<div id="collapse3" class="panel-collapse collapse" role="tabpanel">
+									<ul class="list-group groupsList">
+										{{#each groups}}
+											<li class="list-group-item">{{this.name}}<button type="button" data-id='{{this.did}}' class="close" aria-label="Close"><span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span></button></li>
+										{{/each}}
+										<li class="list-group-item button addGroups">
+											<input type="text" placeholder="新增..." style="width:70%;display: inline-block;" class="form-control input-sm" />
+											<span role="button" style="font-size: 21px;float:right;line-height: 30px;" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</script>
+				</section>
+				<!--人员设置-->
+				<section id="personSet" class="hidden">
+					<div class="table-responsive userSet">
+						<script type="text/x-handlebars-template" id="userSet">
+							{{#each this}}
+							<table class="table table-bordered">
+								<tr>
+									<th>姓名</th>
+									<th>手机号</th>
+									<th>部门/科室</th>
+									<th>标签</th>
+									<th>是否授课</th>
+									<th>操作</th>
+								</tr>
+								<tr>
+									<td style="width: 150px;">{{username}}</td>
+									<td style="width: 200px;">{{phone}}</td>
+									<td style="min-width: 100px;max-width: 150px;">
+										<select class="form-control input-sm userSetGroups">
+												<option value="{{department.did}}" selected>{{department.name}}</option>
+										</select>
+									</td>
+									<td style="min-width: 150px;max-width: 200px;">
+										<input type="text" value="{{teachlabel}}" class="form-control input-sm teachlabel" />
+									</td>
+									<td style="width:200px;">
+										<div class="checkbox">
+											<label>
+												{{#if level}}
+													<input class="level" type="checkbox" checked>
+												{{else}}
+													<input class="level" type="checkbox">
+												{{/if}}
+												设为授课人
+											</label>
+										</div>
+									</td>
+									<td><button type="button" data-userid="{{userid}}" class="btn btn-sm btn-primary userSetBtn">保存</button></td>
+								</tr>
+							</table>
+							{{/each}}
+						</script>
+					</div>
+					<!--用户列表分页-->
+					<nav aria-label="userSet navigation">
+						<ul class="pagination userListNav">
+							<script type="text/x-handlebars-template" id="userListNav">
+								<li>
+									<a href="javascript:;" aria-label="Previous">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+								{{#each this}}
+								<li class="{{this}}"><a href="javascript:;" aria-label="{{this}}">{{this}}</a></li>
+								{{/each}}
+								<li>
+									<a href="javascript:;" aria-label="Next">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</script>
+						</ul>
+					</nav>
+				</section>
+			</div>
+		</div>
+		<script src="assets/bt2.min.js"></script>
+		<script src="assets/hdbs.min.js"></script>
+		<script src="assets/sChart.min.js"></script>
+		<script src="assets/main.js"></script>
+	</body>
+
+</html>

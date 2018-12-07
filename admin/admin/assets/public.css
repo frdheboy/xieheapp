@@ -1,0 +1,206 @@
+.alert{
+	text-align: center;
+	background-color: #337ab7;
+	margin-top: 20px;
+	color: white;
+	font-size:2rem;
+}
+.btn-default:focus,
+.btn-default.focus {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  outline: 0;
+}
+.btn-default:hover {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default,
+.btn-default:active:hover,
+.btn-default.active:hover,
+.open > .dropdown-toggle.btn-default:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default:active.focus,
+.btn-default.active.focus,
+.open > .dropdown-toggle.btn-default.focus {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  outline: 0;
+}
+.btn-group {
+    margin-bottom: 10px;
+}
+.btn-group-sm>.btn, .btn-sm {
+    padding: 5px 25px;
+}
+.logout{
+	margin-bottom: 10px;
+    float: right;
+}
+@media (min-width: 768px){
+	.search .form-group {
+	    margin-bottom: 6px;
+	}
+	.submit{
+	    top: -3px;
+	    position: relative;
+	}
+	.jumbotron {
+		padding: 20px 0 14px 0!important;
+		text-align: center;
+        background-color: #f3f3f3;
+	}
+}
+.col-md-4{
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.col-md-4:nth-child(1){
+	padding-left: 0;
+	padding-right: 6px;
+}
+.col-md-4:nth-child(3){
+	padding-right: 0;
+	padding-left: 6px;
+}
+@media (max-width: 992px){
+	.col-md-4{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+button.close:hover,
+button.close:focus {
+  	color: red;
+}
+li.list-group-item.button:hover,
+li.list-group-item.button:focus{
+	color: #337ab7;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    vertical-align: middle;
+}
+#report form{
+	margin-bottom: 20px;
+}
+.form-inline2{
+	border-top: 1px solid #ddd;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+th,td{
+	text-align: center;
+}
+td>.glyphicon{
+    font-size: 22px;
+    line-height: 25px;
+    cursor: pointer;
+    width: 100%;
+}
+.actionPic img,.coursewareFile button,.coursewareFile img{
+	width: 60px;
+	height: 60px;
+	margin: 5px;
+	-moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+.actionPic img:last-child,.coursewareFile img{
+	-moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
+.coursewareFileItem.img {
+    height: 50px;
+    width: 70px;
+}
+#addCourseware{
+	padding: 10px;
+	position: absolute;
+}
+#addCourseware,#addActionPic{
+	cursor: pointer;
+	z-index: 2;
+}
+.coursewareFile button,.coursewareFile img{
+	margin-bottom: 30px;
+}
+.coursewareFile,.actionPicItem,.coursewareFileItem{
+	position: relative;
+}
+.actionPicItem,.coursewareFileItem{
+	display: inline-block;
+}
+.coursewareFile .span{
+	position: absolute;
+	top:0;
+	z-index: 1;
+}
+.coursewareFile .span span{
+	width: 60px;
+	margin: 5px;
+	display: inline-block;
+	margin-top: 70px;
+	text-align: center;
+}
+.actionPic .glyphicon-remove,.coursewareFileItem .glyphicon-remove{
+	position: absolute;
+	left: 54px;
+	top:-4px;
+    cursor: pointer;
+    z-index: 2;
+}
+.jumbotron {
+    margin-bottom: 10px;
+}
+.addActionBtn {
+    margin-bottom: 10px;
+    text-align: right;
+}
+.addActionBtn button{
+	margin-left: 10px;
+}
+#nameListModal .table-responsive{
+    max-height: 465px;
+}
+#QRcodeModal .modal-body img{
+	width: 268px;
+	height: auto;
+}
+#fileViewModal .list-group-item:hover{
+	color: #d9534f;
+	font-weight: bold;
+}
+#fileViewModal .list-group{
+	padding:0;
+	margin: 0;
+}
+#fileViewModal .list-group-item {
+	border-radius: 0;
+}
+#fileViewModal .list-group-item:first-child{
+	border-top: none;
+}
+#fileViewModal .list-group-item:last-child{
+	border-bottom: none;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+#fileViewModal .row{
+	margin: 0;
+}
+#fileViewModal .row img{
+	height: 100px;
+	width: 100%;
+	margin: 13px 0;
+}
+.pagination{
+	margin: 0 0 40px;
+}
